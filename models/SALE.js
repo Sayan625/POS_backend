@@ -1,6 +1,6 @@
 const mongoose=require('mongoose');
 
-//product model
+//sale entry model
 const saleSchema= new mongoose.Schema(
 
     {

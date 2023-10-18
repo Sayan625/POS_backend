@@ -1,23 +1,29 @@
-const JWT=require('jsonwebtoken');
+const JWT = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
-  //const token = req.body.token;
-  const token= req.headers['access_token']
-  if (!token){
-      res.send("you are not allowed")
-      return
+  // Extract the JWT token from the 'access_token' header in the request
+  const token = req.headers['access_token'];
 
-  } 
+  // Check if a token is present in the request headers
+  if (!token) {
+    // If no token is provided, respond with an error message
+    res.send("You are not allowed");
+    return; // Exit the middleware
+  }
 
-  JWT.verify(token, process.env.JWT, (err,data) => {
+  // Verify the JWT token using the secret from the environment variables (process.env.JWT)
+  JWT.verify(token, process.env.JWT, (err, data) => {
     if (err) {
-    res.send("error occured")
-      return
+      // If verification fails, respond with an error message
+      res.send("Error occurred");
+      return; // Exit the middleware
+    } else {
+      // If verification is successful, attach the decoded data to the request object
+      req.data = data;
+      next(); // Continue to the next middleware or route
     }
-    else
-    req.data=data
-    next();
   });
 };
 
-module.exports=verifyToken
+
+module.exports = verifyToken;
